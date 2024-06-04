@@ -10,12 +10,14 @@ public class PlayerControl : MonoBehaviour
     public GameManager _gameManager;
     public GameObject gameManagerObject;
     private float _speed = 10.0f;
-    
+    public static bool isGamePaused = false;
+    public GameObject shopMenuUI;
    
     // Start is called before the first frame update
     void Start()
     {
-        
+        shopMenuUI.SetActive(false);
+        transform.position = new Vector3(0, 2, 0);   
         _gameManager = gameManagerObject.GetComponent<GameManager>();
     }
 
@@ -43,6 +45,13 @@ public class PlayerControl : MonoBehaviour
         {
             transform.Translate(Vector3.right * Time.deltaTime*_speed);
         }
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            shopMenuUI.SetActive(false);
+            Time.timeScale = 1; //Freeze the game
+            isGamePaused = false;
+        }
         
     }
 
@@ -55,6 +64,13 @@ public class PlayerControl : MonoBehaviour
             _gameManager.coinsText.text = $"Coins: {_gameManager.coinCount}";
             Debug.LogWarning(_gameManager.coinCount);
             Debug.LogWarning("Coin Collected");
+        }
+        if (other.CompareTag("Shop"))
+        {
+            Debug.LogWarning("Shop Entered");
+            shopMenuUI.SetActive(true);
+            Time.timeScale = 0; //Freeze the game
+            isGamePaused = true;
         }
     }
 
